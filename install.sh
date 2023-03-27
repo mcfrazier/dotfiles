@@ -38,7 +38,7 @@ _success() {
 install_git() {
   _process "+ installing git"
 
-  apt install git
+  sudo apt install git -y
   #ln -s "${DIR}/config/.gitconfig" "${HOME}/.gitconfig"
   #ln -s "${DIR}/config/.gitignore" "${HOME}/.gitignore"
 
@@ -163,8 +163,11 @@ link_dotfiles() {
 
 
 main() {
-  apt update
-  apt upgrade -y
+  _process "+ updating current packages"
+  sudo apt update
+  sudo apt upgrade -y
+  [[ $? ]] && _success "All files have been copied"
+
 
   #check if git is installed
   if ! type -P 'git' &> /dev/null; then
