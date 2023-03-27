@@ -4,7 +4,7 @@
 
 LOG="/var/log/dotfiles.log"
 GITHUB_USER="mcfrazier"
-GITHUB_REPO="mcf-dotfiles"
+GITHUB_REPO="dotfiles"
 DIR="/usr/local/opt/${GITHUB_REPO}"
 USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
 
