@@ -4,13 +4,8 @@
 
 GITHUB_USER="mcfrazier"
 GITHUB_REPO="dotfiles"
-#USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
-
-#DIR="/usr/local/opt/${GITHUB_REPO}"
-#DIR="${USER_HOME}/.${GITHUB_REPO}"
 DIR="${HOME}/.${GITHUB_REPO}"
 
-#LOG="/var/log/dotfiles.log"
 LOG="${DIR}/dotfiles.log"
 touch "${LOG}"
 
@@ -19,40 +14,42 @@ touch "${LOG}"
 _warning() {
   echo "$(date) WARNING:  $@" >> $LOG
   printf "$(tput setaf 3) WARNING:$(tput sgr0) %s\n" "$@"
-
 }
 
 _error() {
   echo "$(date) ERROR:  $@" >> $LOG
   printf "$(tput setaf 3) ERROR:$(tput sgr0) %s. Aborting...\n" "$@"
   exit 1
-
 }
 _process() {
   echo "$(date) PROCESSING:  $@" >> $LOG
-  printf "$(tput setaf 6) %s...$(tput sgr0)\n" "$@"
+  printf "$(tput setaf 6)→ %s...$(tput sgr0)\n" "$@"
 }
 
 _success() {
   local message=$1
   printf "%s✓ SUCCESS:%s\n" "$(tput setaf 2)" "$(tput sgr0) $message"
 }
+
+_question() {
+  printf "$(tput setaf 4) %s $(tput sgr0)" "$@"
+}
 ##end msg help fns
 
 
 ##installation helper fns
 install_git() {
-  _process "+ installing git"
+  _process "Installing git"
 
   sudo apt install git -y
   #ln -s "${DIR}/configs/.gitconfig" "${HOME}/.gitconfig"
   #ln -s "${DIR}/configs/.gitignore" "${HOME}/.gitignore"
 
-  [[ $? ]] && _success "+ installed git"
+  [[ $? ]] && _success "Installed git"
 }
 
 setup_git() {
-  _process "+ setting up git author"
+  _process "Setting up git author"
 
   #check if git author already set
   GIT_AUTHOR_NAME=eval "git config user.name"
@@ -76,14 +73,14 @@ setup_git() {
       _warning "No git user email has been set. Please update manually"
     fi
   else
-    _process "+ git author already set"
+    _process "git author already set"
 
   fi
 }
 
 #TODO 
 init_git_repo() {
-  _process "initializing git repository"
+  _process "Initializing git repository"
   git init
 
   git remote add origin "https://github.com/${GITHUB_USER}/${GITHUB_REPO}.git"
@@ -96,23 +93,23 @@ init_git_repo() {
 
   git pull origin main
 
-  [[ $? ]] && _success "+ ${GITHUB_REPO} repository has been initialized"
+  [[ $? ]] && _success "${GITHUB_REPO} repository has been initialized"
 }
 ##end install helper fns
 
 
 download_dotfiles() {
-  _process "→ Creating directory at ${DIR} and setting permissions"
+  _process "Creating directory at ${DIR} and setting permissions"
   mkdir -p "${DIR}"
 
-  _process "→ Downloading repository to /tmp directory"
+  _process "Downloading repository to /tmp directory"
   curl -#fLo /tmp/${GITHUB_REPO}.tar.gz "https://github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/main"
   #curl -#fLo /tmp/${GITHUB_REPO}.tar.gz -u token:${PAT} "https://github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/main"
 
-  _process "→ Extracting files to ${DIR}"
+  _process "Extracting files to ${DIR}"
   tar -zxf /tmp/${GITHUB_REPO}.tar.gz --strip-components 1 -C "${DIR}"
 
-  _process "→ Removing tarball from /tmp directory"
+  _process "Removing tarball from /tmp directory"
   rm -rf /tmp/${GITHUB_REPO}.tar.gz
 
   [[ $? ]] && _success "${DIR} created, repository downloaded and extracted"
@@ -127,7 +124,7 @@ link_dotfiles() {
   #symlink files to the HOME directory
   # CHANGING TO USER_HOME, ow running w sudo causes write to root dir
   if [[ -f "${DIR}/opt/files" ]]; then
-    _process "→ Symlinking dotfiles in /configs"
+    _process "Symlinking dotfiles in /configs"
 
     #set variable for list of files
     files="${DIR}/opt/files"
@@ -144,7 +141,7 @@ link_dotfiles() {
     do  
       for link in ${links[$index]}
       do
-        _process "→ Linking ${links[$index]}"
+        _process "Linking ${links[$index]}"
         #set IFS back to space to split string
         IFS=$' '
         #create an arr of line items
@@ -160,21 +157,16 @@ link_dotfiles() {
     #reset IFS
     IFS=$OIFS
 
-    #source "${HOME}/.bash_profile"
-    #source "${USER_HOME}/.bashrc"
-    #source "${HOME}/.bashrc"
-
     [[ $? ]] && _success "All files have been copied"
   fi
 }
 
 
 main() {
-  _process "+ updating current packages"
+  _process "Updating current packages"
   sudo apt update
   sudo apt upgrade -y
-  [[ $? ]] && _success "All files have been copied"
-
+  [[ $? ]] && _success "Current packages have been updated"
 
   #check if git is installed
   if ! type -P 'git' &> /dev/null; then
@@ -191,10 +183,7 @@ main() {
   #TODO install packages
 
 
-  #
-  #. "${HOME}/.bash_profile"
   . "${HOME}/.bashrc"
-
 }
 
 
