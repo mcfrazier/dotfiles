@@ -1,6 +1,6 @@
-config/.vim        .vim
-config/.vimrc      .vimrc
-config/.bashrc     .bashrc
-config/.gdbinit    .gdbinit
-config/.gitconfig  .gitconfig
-config/.tmux.conf  .tmux.conf
+configs/.vim        .vim
+configs/.vimrc      .vimrc
+configs/.bashrc     .bashrc
+configs/.gdbinit    .gdbinit
+configs/.gitconfig  .gitconfig
+configs/.tmux.conf  .tmux.conf

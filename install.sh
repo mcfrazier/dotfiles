@@ -2,11 +2,17 @@
 # /install.sh
 
 
-LOG="/var/log/dotfiles.log"
 GITHUB_USER="mcfrazier"
 GITHUB_REPO="dotfiles"
-DIR="/usr/local/opt/${GITHUB_REPO}"
-USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+#USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+
+#DIR="/usr/local/opt/${GITHUB_REPO}"
+#DIR="${USER_HOME}/.${GITHUB_REPO}"
+DIR="${HOME}/.${GITHUB_REPO}"
+
+#LOG="/var/log/dotfiles.log"
+LOG="${DIR}/dotfiles.log"
+touch "${LOG}"
 
 
 ##message helper fns
@@ -39,8 +45,8 @@ install_git() {
   _process "+ installing git"
 
   sudo apt install git -y
-  #ln -s "${DIR}/config/.gitconfig" "${HOME}/.gitconfig"
-  #ln -s "${DIR}/config/.gitignore" "${HOME}/.gitignore"
+  #ln -s "${DIR}/configs/.gitconfig" "${HOME}/.gitconfig"
+  #ln -s "${DIR}/configs/.gitignore" "${HOME}/.gitignore"
 
   [[ $? ]] && _success "+ installed git"
 }
@@ -70,7 +76,7 @@ setup_git() {
       _warning "No git user email has been set. Please update manually"
     fi
   else
-    _process "+ git author already set ($GIT_AUTHOR_NAME)"
+    _process "+ git author already set"
 
   fi
 }
@@ -144,8 +150,8 @@ link_dotfiles() {
         #create an arr of line items
         file=(${links[$index]})
         #create symlink
-        #ln -fs "${DIR}/${file[0]}" "${HOME}/${file[1]}"
-        ln -fs "${DIR}/${file[0]}" "${USER_HOME}/${file[1]}"
+        #ln -fs "${DIR}/${file[0]}" "${USER_HOME}/${file[1]}"
+        ln -fs "${DIR}/${file[0]}" "${HOME}/${file[1]}"
       done
       #set IFS back to \r and \n
       IFS=$'\r\n'
@@ -155,7 +161,8 @@ link_dotfiles() {
     IFS=$OIFS
 
     #source "${HOME}/.bash_profile"
-    source "${USER_HOME}/.bashrc"
+    #source "${USER_HOME}/.bashrc"
+    #source "${HOME}/.bashrc"
 
     [[ $? ]] && _success "All files have been copied"
   fi
@@ -182,6 +189,12 @@ main() {
   link_dotfiles
 
   #TODO install packages
+
+
+  #
+  #. "${HOME}/.bash_profile"
+  . "${HOME}/.bashrc"
+
 }
 
 
