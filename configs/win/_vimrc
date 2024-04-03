@@ -1,0 +1,37 @@
+" vimrc for powershell/gvim
+
+syntax on
+set number relativenumber
+
+set shell=powershell
+set backspace=indent,eol,start
+
+" convenience things
+set expandtab
+set shiftwidth=2
+set smarttab
+set autoindent
+set smartindent
+colorscheme gummybears
+"colorscheme industry
+
+execute pathogen#infect()
+
+" map auto complete for (, [, {, ', "
+inoremap ( ()<esc>i
+inoremap [ []<esc>i
+inoremap { {}<esc>i
+inoremap } {<esc>o}<esc>O
+inoremap ' ''<esc>i
+inoremap " ""<esc>i
+
+" map ctrl-j to exit above autocompletes"
+inoremap <c-j> <esc>/[)}"'\]>]<cr>:nohl<cr>a
+
+inoremap jk <esc>
+inoremap JK <esc>
+
+nnoremap tv :vert term<return>
+nnoremap tt :terminal<return>
+
+set noerrorbells visualbell t_vb=
