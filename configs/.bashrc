@@ -130,8 +130,7 @@ LS_COLORS="di=34"
 export LS_COLORS
 
 export PATH="$HOME/.cargo/bin:$HOME/bin:$PATH"
-export PYTHONPATH="${PYTHONPATH}:/home/m201968/.local/bin"
+export PYTHONPATH="${PYTHONPATH}:$HOME/.local/bin"
 
 # aliases
 alias ghidra="/home/ghidra/ghidra_10.1.2_PUBLIC/ghidraRun"
-alias phoenix="cd /home/m201968/cwe/practice/phoenix; ./boot-exploit-education-phoenix-amd64.sh"
