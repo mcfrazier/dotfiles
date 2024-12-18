@@ -6,13 +6,17 @@ set term=screen-256color
 syntax on
 set number relativenumber
 
+colorscheme gummybears
+"colorscheme slate
+
 " convenience things
 set expandtab
 set shiftwidth=2
 set smarttab
 set autoindent
 set smartindent
-colorscheme gummybears
+inoremap # #^H#
+"above line is from :h smartindent, prevents '#' from auto moving to 0th column
 
 execute pathogen#infect()
 
