@@ -123,8 +123,14 @@ set -o ignoreeof     # ^D will not exit shell
 
 # ------------------------------------------------
 
-# added
+#PS1 - original
 export PS1="\[\e[31m\]\u@\h:\[\e[m\] \[\e[34m\]\W\[\e[m\] \\$ "
+#PS1 no color
+#PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\u@\h: \W${PS1_CMD1} \\$ '
+#PS1 w colors
+PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]: \[\033[01;34m\]\W\[\033[00m\]${PS1_CMD1} \$ '
+
+
 alias ls='ls --color'
 LS_COLORS="di=34"
 export LS_COLORS
